@@ -29,6 +29,61 @@
 
     <!-- Template Stylesheet -->
     <link href="css/style.css" rel="stylesheet">
+    <style>
+body {font-family: Arial, Helvetica, sans-serif;}
+form {border: 3px solid #f1f1f1;}
+
+input[type=text], input[type=password] {
+  /*width: 100%;*/
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+}
+
+button {
+  background-color: #f44336;
+  color: white;
+  /*padding: 5px 0;
+  margin: 5px 0;*/
+  border: none;
+  cursor: pointer;
+  
+  border-radius: 12px;
+}
+
+button:hover {
+  opacity: 0.8;
+}
+
+
+
+
+table {
+  border-collapse: collapse;
+  width: 97%;
+}
+
+th, td {
+  text-align: center;
+  padding: 8px;
+}
+
+tr:nth-child(even){background-color: #f2f2f2}
+
+th {
+  background-color: #04AA6D;
+  color: white;
+}
+
+
+h2{
+  padding: 30px;
+}
+
+
+</style>
 </head>
 
 <body>
@@ -51,11 +106,42 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarCollapse">
             <div class="navbar-nav ms-auto p-4 p-lg-0">
-                <!--<a href="index.html" class="nav-item nav-link">Home</a>-->
-                <a href="bookaservice.php" class="nav-item nav-link">Book a service</a>
-                <a href="viewtracking.php" class="nav-item nav-link">View Tracking</a>
-                <a href="#services" class="nav-item nav-link">View History</a>
-                <a href="viewprofile.php" class="nav-item nav-link">View Profile</a>
+                <!--<a href="index.html" class="nav-item nav-link">Dashboard</a>-->
+                <a href="viewrequest.php " class="nav-item nav-link">Requests</a>
+                <div class="nav-item dropdown">
+                <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Add</a>
+                <div class="dropdown-menu fade-up m-0">
+                <a href="viewcargotype.php" class="dropdown-item">Cargo Type</a>
+                <a href="viewcontainer.php" class="dropdown-item">Container</a>
+                <a href=" shippmententry.php" class="dropdown-item">Shippment Entry</a>
+                <a href="clearancedoc.php " class="dropdown-item">Clearance Documents</a>
+                <a href="uploadd_note.php " class="dropdown-item">Delivery Note</a>
+                <a href="addexpense.php " class="dropdown-item">Expense</a>
+                </div></div>
+                <div class="nav-item dropdown">
+                <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Update</a>
+                <div class="dropdown-menu fade-up m-0">
+                <a href="shippingcharge.php " class="dropdown-item">Shipping Charge</a>
+                
+                <a href="updatetracking.php " class="dropdown-item">Update Tracking</a>
+                <a href="viewp_hold.php " class="dropdown-item">Packages on hold</a>
+                </div></div>
+                <div class="nav-item dropdown">
+                <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Mode</a>
+                <div class="dropdown-menu fade-up m-0">
+                <a href="airfreight.php " class="dropdown-item">Air Freight</a>
+                
+                <a href="shipfreight.php " class="dropdown-item">Ship Freight</a>
+                </div></div>
+
+                <div class="nav-item dropdown">
+                <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">View</a>
+                <div class="dropdown-menu fade-up m-0">
+                <a href="warehousepackages.php " class="dropdown-item">Warehouse packages</a>
+                <a href="viewhistory.php " class="dropdown-item">History</a>
+                
+                </div></div>
+                <a href="report.php  " class="nav-item nav-link">Report</a>
                <!-- <div class="nav-item dropdown">
                     <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Pages</a>
                     <div class="dropdown-menu fade-up m-0">
@@ -67,16 +153,103 @@
                         <a href="404.html" class="dropdown-item">404 Page</a>
                     </div>
                 </div>-->
-                
                 <a href="index.html" class="nav-item nav-link">Logout</a>
             </div>
-            
+            <!--<h4 class="m-0 pe-lg-5 d-none d-lg-block"><i class="fa fa-headphones text-primary me-3"></i>+966 56 876 7817</h4>-->
         </div>
     </nav>
     <!-- Navbar End -->
+    <center>
+    <h2>View Request</h2>
+	<table width="200" border="1" align="center">
+  
+    <tr>
+      <td><b>Sl. No.</b></td>
+      <td><b>TrackId</b></td>
+      <td><b>Sender Details</b></td>
+      <td><b>Receiver Details</b></td>
+      <td><b>Pickup address</b></td>
+      <td><b>Date</b></td>
+      <td><b>Package Details</b></td>
+      <td><b>Total Cost</b></td>
+      <td> </td>
+    </tr>
+    <?php
 
-<center><h1 style="padding: 60px;">WELCOME</h1></center>
+$con=mysqli_connect('localhost','root','','r1');
 
+$sql1 = "SELECT * FROM `tracking` NATURAL JOIN `booking` where tracking.status = 'Requested'";
+$result = mysqli_query($con,$sql1);
+
+$s=1;
+
+while($row = mysqli_fetch_array($result)) {
+?>
+    <tr>
+      <td> <?php echo $s;$s++; ?> </td>
+      <td><a href="trackid_info.php?track_id=<?php echo $row['track_id']; ?>"> <?php echo $row["track_id"]; ?> </a></td>
+      <td> <?php
+      $s1 = $row['sender_id'];
+      $sql2 = "SELECT * FROM `customers` WHERE cust_id = '$s1'";
+      $result2 = mysqli_query($con,$sql2);
+      
+      while($row2 = mysqli_fetch_array($result2)) {
+          $n1 = $row2['name'];
+          $a1 = $row2['address'];
+          $p1 = $row2['phone_no'];
+          $e1 = $row2['emailid'];
+      }
+      echo $n1."<br>".$a1."<br>".$p1."<br>".$e1;?> </td>
+      <td><?php
+      echo $row['r_name'].'<br>';
+      echo $row['r_country'].'<br>';
+      echo $row['r_state'].'<br>';
+      echo $row['r_district'].'<br>';
+      echo $row['r_city'].' , '.$row['r_pincode'].'<br>';
+      echo $row['r_phoneno'].'<br>';
+      echo $row['r_emailid']; ?> </td>
+      <td><?php
+      echo $row['p_country'].'<br>';
+      echo $row['p_state'].'<br>';
+      echo $row['p_district'].'<br>';
+      echo $row['p_city'].' , '.$row['p_pincode'].'<br>';
+       ?> </td>
+      <td><?php echo $row['date']; ?> </td>
+      <td><?php
+      $ct = $row['cargo_id'];
+      $sql5 = "SELECT * FROM `cargotype` WHERE cargo_id = '$ct'";
+      $result5 = mysqli_query($con,$sql5);
+      while($row5 = mysqli_fetch_array($result5)) {
+          $ct1 = $row5['name'];
+      }
+      echo "Cargo Type:".$ct1."<br>";
+      echo "Weight : ".$row['weight']."<br>";
+      echo "Volume : ".$row['volume']."<br>";
+      echo "Carton : ".$row['noofcarton']."<br>"; ?> </td>
+      <td><?php echo $row['totalcost'] ?></td>
+      <td><button name="accept" value="accept" onclick="onsubmit()"><a style='color:white;' href="acceptrequest.php?track_id=<?php echo $row['track_id']; ?>">Accept</button><br><br>
+		<button name="reject" value="Reject"><a style='color:white;' href="rejectrequest.php?track_id=<?php echo $row['track_id']; ?>">Reject</td>
+    </tr>
+  <?php } ?>
+  
+</table>
+<!--<script>
+    function onsubmit(){
+        var sel = document.createElement("select");
+        var opt1 = document.createElement("option");
+        var opt2 = document.createElement("option");
+
+        opt1.value = "1";
+        opt1.text = "Option: Value 1";
+
+        opt2.value = "2";
+        opt2.text = "Option: Value 2";
+
+        sel.add(opt1, null);
+        sel.add(opt2, null);
+    }
+</script>-->
+<center>
 
 <!-- Footer Start -->
 <div class="container-fluid bg-dark text-light footer pt-5 wow fadeIn" data-wow-delay="0.1s" style="margin-top: 6rem;">
@@ -160,7 +333,3 @@
 </body>
 
 </html>
-
-
-
-

@@ -1,8 +1,20 @@
-
 <!DOCTYPE html>
 <html lang="en">
 
-<head> 
+<head>
+     
+<?php
+/*$con=mysqli_connect('localhost','root','','r1');
+$id=$_GET['cargo_id'];
+$sql="SELECT * FROM `cargotype` where cargo_id=$id";
+while($row = mysqli_query($dbconnect,$sql)){
+    $cname=$row['name'];
+    $desc=$row['description'];
+    $amt=$row['cost'];
+
+    
+}*/
+?>
     <meta charset="utf-8">
     <title>Rolex Cargo Services</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
@@ -46,12 +58,11 @@ input[type=text], input[type=password] {
 button {
   background-color: #f44336;
   color: white;
-  /*padding: 5px 0;
-  margin: 5px 0;*/
+  padding: 14px 20px;
+  margin: 8px 0;
   border: none;
   cursor: pointer;
-  width: 40%;
-  border-radius: 12px;
+  width: 30%;
 }
 
 button:hover {
@@ -59,30 +70,29 @@ button:hover {
 }
 
 
-
-
-table {
-  border-collapse: collapse;
-  width: 70%;
+.container {
+  padding: 10px;
 }
 
-th, td {
-  text-align: center;
-  padding: 8px;
+span.psw {
+  float: right;
+  padding-top: 16px;
 }
-
-tr:nth-child(even){background-color: #f2f2f2}
-
-th {
-  background-color: #04AA6D;
-  color: white;
-}
-
 
 h2{
   padding: 30px;
 }
 
+/* Change styles for span and cancel button on extra small screens */
+
+@media screen and (max-width: 500px) {
+  /*span.psw {
+     display: block;
+     float: none;
+  }*/
+  
+  
+}
 
 </style>
 </head>
@@ -159,50 +169,65 @@ h2{
         </div>
     </nav>
     <!-- Navbar End -->
+    <?php
+    $con=mysqli_connect('localhost','root','','r1');
+
+    $id = $_GET['co_id'];
+    $sql = "SELECT * FROM `container` where co_id = '$id'";
+    $result = mysqli_query($con,$sql);
+
+    while($row = mysqli_fetch_array($result)){
+        
+        $type = $row['type'];
+        $des = $row['destination'];
+        $feet = $row['feet'];
+        $d_date = $row['d_date'];
+    }
+
+?>
     
+<?php
+    if(isset($_POST['update'])){
+        
+        $type1 = $_POST['ctype'];
+        $feet1 = $_POST['feet'];
+        $destination1 = $_POST['destination'];
+        $d_date1 = $_POST['d_date'];
+        
+        $sql2="UPDATE `container` SET `type` = '$type1 ', `feet` = '$feet1', `destination` = '$destination1', `d_date` = '$d_date1'  WHERE `container`.`co_id` = $id";
+        $result2=mysqli_query($con,$sql2);
+        echo $result2;
+        if($result2){
+            echo "<script>alert('Updated successfully');window.location='viewcontainer.php'</script>";	
+        }
+    }
+?>
+
+
 <center>
-    <form action="" method="get">
-<div class="container">
-<h2>View Cargo Type</h2>
-<!--Search: <input type="text" name="search" style="width: 200px;height: 30px;border: radius 12px;" ><br>-->
-	<table solid border="1">
-  
-  <caption style="caption-side:top;text-align:right;"><button style="background-color: grey;width: 20%" name="add"><a href="addcargotype.php" style="color: black;">+ Add new type</a></button></caption>
-    <tr>
-      <td><b>Sl.No.</b></td>
-      <td><b>Cargo type</b></td>
-      <td><b>Description</b></td>
-      <td><b>Amount</b></td>
-      <td></td>
-    </tr>
+<form action="" method="post">
+<h2>Add Container</h2> 
+    <table>
+
     
-      <?php
 
-$con=mysqli_connect('localhost','root','','r1');
+        <tr><th>Type</th>
+        <th><input type="text" name="ctype" value="<?php echo $type; ?>" required></th></tr>
 
-$sql="SELECT * FROM cargotype";
+        <tr><th>Feet</th>
+        <th><input type="text" name="feet" value="<?php echo $feet; ?>" required></th></tr>
 
-$result = mysqli_query($con,$sql);
-$s=1;
+        <tr><th>Destination</th>
+        <th><input type="text" name="destination" value="<?php echo $des; ?>" required></th></tr>
 
-while($row = mysqli_fetch_array($result)) {
-?>
-    <tr><td><?php echo $s;$s++; ?></td>
-    <td><?php echo $row["name"]; ?></td>
-    <td><?php echo $row["description"]; ?></td>
-    <td><?php echo $row["cost"]; ?></td>
-    
-    <td><button name='update'><a style='color:white;' href='updatecargotype.php?cargo_id=<?php echo $row['cargo_id'];?>'>Update</a></button> <button name='delete'><a style='color:white;' href="ctypedelete.php?id=<?php echo $row['cargo_id']; ?>">Delete</button></td></tr>
-<?php  
-}
-?>
- 
- 
-    
-</table>
-</div>
-</form>
+        <tr><th>Departure date</th>
+        <th><input type="date" name="d_date" value="<?php echo $d_date; ?>" required></th></tr>
+        </table>
+        <button type="submit" name="update">Update</button>
+</form>        
 </center>
+
+
 
 
 

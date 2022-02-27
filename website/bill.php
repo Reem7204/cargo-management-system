@@ -1,3 +1,7 @@
+<?php
+// Start the session
+session_start();
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -29,6 +33,86 @@
 
     <!-- Template Stylesheet -->
     <link href="css/style.css" rel="stylesheet">
+    <style>
+body {font-family: Arial, Helvetica, sans-serif;}
+fieldset {border: 2px solid #f1f1f1;
+width: 50%;}
+
+legend {
+  background-color: lightgray;
+  color: white;
+  padding: 5px 10px;
+}
+
+select ,input[type=text], input[type=password] {
+  /*width: 100%;*/
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+}
+
+button {
+  background-color: #f44336;
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  cursor: pointer;
+  width: 20%;
+}
+
+button:hover {
+  opacity: 0.8;
+}
+
+
+.container {
+  padding: 10px;
+}
+
+span.psw {
+  float: right;
+  padding-top: 16px;
+}
+
+/* Change styles for span and cancel button on extra small screens */
+
+@media screen and (max-width: 500px) {
+  /*span.psw {
+     display: block;
+     float: none;
+  }*/
+  
+  
+}
+
+.browser {
+  margin: 10px;
+  padding: 5px;
+}
+
+.browser {
+  background: #FA8072;
+  width: 500px;
+}
+
+/*.browser2 {
+  background: #FA8072;
+  width: 600px;
+}*/
+
+.browser > h2, p {
+  margin: 4px;
+  font-size: 90%;
+}
+
+h2{
+  padding: 30px;
+}
+
+</style>
 </head>
 
 <body>
@@ -51,10 +135,10 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarCollapse">
             <div class="navbar-nav ms-auto p-4 p-lg-0">
-                <!--<a href="index.html" class="nav-item nav-link">Home</a>-->
+            <a href="index.html" class="nav-item nav-link">Home</a>
                 <a href="bookaservice.php" class="nav-item nav-link">Book a service</a>
                 <a href="viewtracking.php" class="nav-item nav-link">View Tracking</a>
-                <a href="#services" class="nav-item nav-link">View History</a>
+                <a href="viewhistory.php" class="nav-item nav-link">View History</a>
                 <a href="viewprofile.php" class="nav-item nav-link">View Profile</a>
                <!-- <div class="nav-item dropdown">
                     <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Pages</a>
@@ -74,8 +158,46 @@
         </div>
     </nav>
     <!-- Navbar End -->
+<center>
 
-<center><h1 style="padding: 60px;">WELCOME</h1></center>
+    <h2>Shipping Entry</h2>
+    <form method="post">
+    
+        
+    <fieldset> <legend> Your bill</legend>
+    <?php
+        $con = mysqli_connect("localhost","root","","r1");
+        $id = $_SESSION['last_id1'];
+        
+        $sql1 = "SELECT * FROM booking where track_id = $id";
+        $result = mysqli_query($con,$sql1);
+        while($row = mysqli_fetch_array($result)) {
+            ?>
+    
+    <table>
+       
+        <tr><th>Weight : </th><th><?php echo $row["weight"]; ?></th></tr>
+        <tr><th>Volume : </th><th><?php echo $row["volume"]; ?></th></tr>
+        <tr><th>No. of carton : </th><th><?php echo $row["noofcarton"]; ?></th></tr>
+        <tr><th>Departure country : </th><th><?php echo $row["r_country"]; ?></th></tr>
+
+
+
+        <tr><th>Arrival country : </th><th><?php echo $row["p_country"]; ?></th></tr>
+        <hr>
+
+
+
+        <tr><th>Total amount : </th><th><?php echo $row["totalcost"]; ?> </th></tr>
+    </table>
+    <?php
+        }
+        ?>
+    </fieldset>
+    <a href="bookaservice.php">Go back </a>
+    </form>
+</center>
+
 
 
 <!-- Footer Start -->
@@ -160,7 +282,3 @@
 </body>
 
 </html>
-
-
-
-
